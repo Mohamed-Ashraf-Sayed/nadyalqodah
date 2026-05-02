@@ -1,0 +1,62 @@
+# Backend (not pushed to this repo)
+backend/
+
+# Flutter / Dart
+mobile/.dart_tool/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/.packages
+mobile/.pub-cache/
+mobile/.pub/
+mobile/build/
+mobile/.metadata
+mobile/coverage/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.DS_Store
+
+# iOS
+mobile/ios/Pods/
+mobile/ios/.symlinks/
+mobile/ios/Flutter/Flutter.framework
+mobile/ios/Flutter/Flutter.podspec
+mobile/ios/Flutter/App.framework
+mobile/ios/Flutter/flutter_assets/
+mobile/ios/Flutter/flutter_export_environment.sh
+mobile/ios/Flutter/Generated.xcconfig
+mobile/ios/Runner/GeneratedPluginRegistrant.*
+mobile/ios/Runner.xcworkspace/xcuserdata/
+mobile/ios/Runner.xcodeproj/xcuserdata/
+mobile/ios/Runner.xcodeproj/project.xcworkspace/xcuserdata/
+
+# Android
+mobile/android/.gradle/
+mobile/android/captures/
+mobile/android/gradlew
+mobile/android/gradlew.bat
+mobile/android/local.properties
+mobile/android/**/GeneratedPluginRegistrant.java
+mobile/android/key.properties
+mobile/android/**/*.keystore
+mobile/android/**/*.jks
+mobile/android/app/release/
+mobile/android/app/debug/
+mobile/android/app/profile/
+
+# macOS / Web (auto-generated)
+mobile/macos/Pods/
+mobile/macos/Flutter/ephemeral/
+
+# Secrets
+*.env
+.env*
+!.env.example
+google-services.json
+GoogleService-Info.plist
+
+# Misc
+*.log
+*.lock.bak
