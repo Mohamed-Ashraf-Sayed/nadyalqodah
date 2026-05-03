@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../data/models/member.dart';
 import '../../../data/providers/providers.dart';
 import '../../../shared/widgets/member_avatar.dart';
+import '../../auth/auth_controller.dart';
 
 final memberDetailProvider =
     FutureProvider.autoDispose.family<Member, String>((ref, id) {
@@ -24,9 +26,21 @@ class MemberDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(memberDetailProvider(memberId));
+    final isAdmin = ref.watch(authControllerProvider).user?.isAdmin == true;
     return Scaffold(
       appBar: AppBar(
         title: const Text('بطاقة عضو'),
+        actions: [
+          if (isAdmin)
+            IconButton(
+              icon: const Icon(Icons.edit_outlined),
+              tooltip: 'تعديل البيانات',
+              onPressed: () async {
+                await context.push('/admin/members/$memberId/edit');
+                ref.invalidate(memberDetailProvider(memberId));
+              },
+            ),
+        ],
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),

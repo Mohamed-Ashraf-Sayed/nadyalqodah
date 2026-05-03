@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+
 import '../../../core/theme/app_theme.dart';
 import '../../../data/providers/providers.dart';
 import '../../../data/repositories/admin_repository.dart';
@@ -493,6 +494,22 @@ class _PendingCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
+            if (request.memberId != null)
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  icon: const Icon(Icons.edit_outlined, size: 18),
+                  label: const Text('تعديل البيانات'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.primary,
+                    side: const BorderSide(color: AppColors.primary),
+                    minimumSize: const Size(0, 42),
+                  ),
+                  onPressed: () =>
+                      context.push('/admin/members/${request.memberId}/edit'),
+                ),
+              ),
+            if (request.memberId != null) const SizedBox(height: 8),
             Row(
               children: [
                 Expanded(

@@ -4,6 +4,13 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../data/services/version_service.dart';
 
+VersionCheckResult _markSkipped(VersionCheckResult r) => VersionCheckResult(
+      forceUpdate: false,
+      softUpdate: r.softUpdate,
+      info: r.info,
+      currentBuild: r.currentBuild,
+    );
+
 class UpdateRequiredScreen extends ConsumerStatefulWidget {
   const UpdateRequiredScreen({super.key});
 
@@ -14,7 +21,6 @@ class UpdateRequiredScreen extends ConsumerStatefulWidget {
 class _UpdateRequiredScreenState extends ConsumerState<UpdateRequiredScreen>
     with SingleTickerProviderStateMixin {
   late final AnimationController _glow;
-  bool _retrying = false;
 
   @override
   void initState() {
@@ -37,10 +43,11 @@ class _UpdateRequiredScreenState extends ConsumerState<UpdateRequiredScreen>
     await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
-  Future<void> _retry() async {
-    setState(() => _retrying = true);
-    await runVersionCheck(ref);
-    if (mounted) setState(() => _retrying = false);
+  void _skip() {
+    final r = ref.read(versionCheckProvider);
+    if (r != null) {
+      ref.read(versionCheckProvider.notifier).state = _markSkipped(r);
+    }
   }
 
   @override
@@ -214,20 +221,11 @@ class _UpdateRequiredScreenState extends ConsumerState<UpdateRequiredScreen>
                   ),
                   const SizedBox(height: 12),
                   TextButton.icon(
-                    onPressed: _retrying ? null : _retry,
-                    icon: _retrying
-                        ? const SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
-                            ),
-                          )
-                        : const Icon(Icons.refresh, color: Colors.white),
-                    label: Text(
-                      _retrying ? 'جاري التحقق...' : 'إعادة المحاولة',
-                      style: const TextStyle(
+                    onPressed: _skip,
+                    icon: const Icon(Icons.arrow_forward, color: Colors.white),
+                    label: const Text(
+                      'تخطي',
+                      style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
                         fontSize: 15,

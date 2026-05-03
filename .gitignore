@@ -1,6 +1,17 @@
 # Backend (not pushed to this repo)
 backend/
 
+# Infrastructure / deployment (not part of mobile app)
+docker-compose.yml
+nginx/
+docs/
+DEPLOY.md
+.env.example
+certbot/
+
+# App Store assets (not source code)
+screenshots/
+
 # Flutter / Dart
 mobile/.dart_tool/
 mobile/.flutter-plugins

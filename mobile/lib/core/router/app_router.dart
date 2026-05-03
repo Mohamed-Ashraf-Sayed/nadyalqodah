@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/models/user.dart';
+import '../../features/admin/screens/admin_member_edit_screen.dart';
 import '../../features/admin/screens/admin_screen.dart';
 import '../../features/admin/screens/stats_screen.dart';
 import '../../features/auth/auth_controller.dart';
@@ -45,13 +46,17 @@ GoRouter createRouter(WidgetRef ref) {
       // Public legal pages
       if (loc.startsWith('/legal/')) return null;
 
-      // Force-update gate: blocks everything except itself
+      // Force-update gate: blocks everything except itself.
+      // Must short-circuit here — falling through to the onboarding/auth
+      // logic below would cause /update-required → /onboarding redirect loops.
       final versionResult = ref.read(versionCheckProvider);
-      if (versionResult?.forceUpdate == true && loc != '/update-required') {
-        return '/update-required';
-      }
-      if (versionResult?.forceUpdate == false && loc == '/update-required') {
+      if (loc == '/update-required') {
+        // Stay on the gate while forceUpdate is true (or version still unknown).
+        if (versionResult?.forceUpdate != false) return null;
         return '/';
+      }
+      if (versionResult?.forceUpdate == true) {
+        return '/update-required';
       }
 
       // Onboarding can be visited directly
@@ -186,6 +191,12 @@ GoRouter createRouter(WidgetRef ref) {
         parentNavigatorKey: _rootNavigatorKey,
         path: '/admin',
         builder: (_, __) => const AdminScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/admin/members/:id/edit',
+        builder: (ctx, st) =>
+            AdminMemberEditScreen(memberId: st.pathParameters['id']!),
       ),
 
       // Preview routes (debug)
